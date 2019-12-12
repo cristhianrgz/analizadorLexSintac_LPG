@@ -12,8 +12,9 @@ L=[a-zA-Z_]+
 Lm=[a-z]+
 D=[0-9]+
 espacio=[ ,\t,\r]+
+COMA    = ","
 %{
-public String lexeme;
+public static String lexeme;
 guardarInfoCod c = new guardarInfoCod();
 %}
 
@@ -35,6 +36,7 @@ guardarInfoCod c = new guardarInfoCod();
 /* Comillas */
 
 <YYINITIAL> "\"" {c.linea=yyline;lexeme=yytext();return Comillas; }
+<YYINITIAL> {COMA} {c.linea=yyline;lexeme=yytext(); return Coma; }
 
 /* OPERADORES NUMÉRICOS */
 <YYINITIAL> "++"  {c.linea=yyline;lexeme=yytext();return Op_incremento; }
@@ -90,9 +92,7 @@ guardarInfoCod c = new guardarInfoCod();
 
 <YYINITIAL> ":=" {c.linea=yyline;lexeme=yytext(); return Definicion; }
 
-<YYINITIAL> ";" {c.linea=yyline;lexeme=yytext(); return P_coma; }
-
-<YYINITIAL> "," {c.linea=yyline;lexeme=yytext(); return Coma; }
+<YYINITIAL> ";" {c.linea=yyline;lexeme=yytext(); return Pycoma; }
 
 <YYINITIAL> ":" {c.linea=yyline;lexeme=yytext(); return Dospuntos; }
 
@@ -106,7 +106,7 @@ guardarInfoCod c = new guardarInfoCod();
 <YYINITIAL> "fin" {c.linea=yyline;lexeme=yytext(); return Fin; }
 <YYINITIAL> "montar" {c.linea=yyline;lexeme=yytext(); return Montar; }
 <YYINITIAL> "LLDG" {c.linea=yyline;lexeme=yytext(); return LLDG; }
-<YYINITIAL> "mostrar" {c.linea=yyline;lexeme=yytext(); return Mostrar; }
+<YYINITIAL> "mostrar" {c.linea=yyline;lexeme=yytext(); return Mostrar;}
 <YYINITIAL> "dibujar" {c.linea=yyline;lexeme=yytext(); return Dibujar; }
 <YYINITIAL> "si" {c.linea=yyline;lexeme=yytext(); return Si; }
 <YYINITIAL> "sino" {c.linea=yyline;lexeme=yytext(); return Sino; }
@@ -122,8 +122,8 @@ guardarInfoCod c = new guardarInfoCod();
 <YYINITIAL> "LLDGcuboLin" {c.linea=yyline;lexeme=yytext(); return LLDGcuboLin; }
 <YYINITIAL> "LLDGesferaSol" {c.linea=yyline;lexeme=yytext(); return LLDGesferaSol; }
 <YYINITIAL> "LLDGesferaLin" {c.linea=yyline;lexeme=yytext(); return LLDGesferaLin; }
-<YYINITIAL> "LLDGrectanSol" {c.linea=yyline;lexeme=yytext(); return LLDGrectanSol; }
-<YYINITIAL> "LLDGrectanLin" {c.linea=yyline;lexeme=yytext(); return LLDGrectanLin; }
+<YYINITIAL> "LGrectanSol" {c.linea=yyline;lexeme=yytext(); return LGrectanSol; }
+<YYINITIAL> "LGrectanLin" {c.linea=yyline;lexeme=yytext(); return LGrectanLin; }
 <YYINITIAL> "LGrotar" {c.linea=yyline;lexeme=yytext(); return LGrotar; }
 <YYINITIAL> "LGlimpiarBuffer" {c.linea=yyline;lexeme=yytext(); return LGlimpiarBuffer; }
 <YYINITIAL> "LGlimpiarBufferColor" {c.linea=yyline;lexeme=yytext(); return LGlimpiarBufferColor; }

@@ -1,0 +1,312 @@
+package codigo;
+
+import java_cup.runtime.Symbol;
+import codigo.VenPrincipal;
+import java.util.Stack;
+
+//PARSER 
+parser code
+{://Codigo visible
+   
+    private Symbol s;
+
+    public void syntax_error(Symbol s){
+       VenPrincipal.notificar_er(" ERROR SINTACTICO. En la línea: "+(s.right+1)+". Existe un problema con el Token ["+ s.value+" ] y la estructura de la sentencia");
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        //VenPrincipal.notificar_er(" ERROR NR SINTACTICO. En la línea: "+(s.left+1)+" columna "+(s.right+1)+"Existe un problema con "+ s.value);
+    }
+:}
+
+terminal Inicio, Programa, Fin, Montar, LLDG, Elemento, Cad, Mostrar, Dibujar, Bool, Ent, NumDec, NumDecL, Si, Sino, Hacer, Mientras, Comillas, Op_decremento, Op_incremento, Numero, 
+        Modelo, Imprimir, Obtener, Orden_principal, LLDGconoSol, LLDGconoLin, LLDGcuboSol, LLDGcuboLin, LLDGesferaSol, LLDGesferaLin, LGrectanSol, LGrectanLin, LGrotar, Punto, Dospuntos, Modulo, 
+        LGlimpiarBuffer, LGlimpiarBufferColor, color_Buffer_Bit, profundidad_Buffer_Bit, acumulacion_Buffer_Bit, plantilla_Buffer_Bit, LGModoPoligono, LGMaterial, LGColor, LGVertice, Definicion,
+        LGEmpezar, LGTerminar, LG_Puntos, LG_Lineas, LG_Linea_Lin, LG_Linea_Ciclo, LG_Triangulos, LG_Triangulo_Lin, LG_Triangulo_Abanico, LG_Cuadrado, LG_Cuadrado_Lin, LG_Poligono, LGModoMatriz,
+        LG_Vista_Modelo, LG_Proyeccion, LG_Textura, LG_Color, LGMatrizOrtografica, LGMatrizPerspectiva, LGMatrizIdentidad, LGVer, LGVolverAMostrar, LGModoVisualizacion, LGPosicionVentanaInicio, LGTamañoVentanaInicio, LGCrearVentana,
+        LGMostrarFuncion, LGRemodeladoFuncion, LGLazoPrincipal, LGMatrizOrtografica2D, LGVentana, LGEjecucionLineas, LG_RGBA, LG_RGB, LG_Indice, LG_Solo, LG_Doble, LG_Acumulacion,
+        LG_Alfa, LG_Profundo, LG_Plantilla, LG_MuestreoMultiple, LG_Estereo, LG_Luminosa, Identificador, Or, And, Not, Mayorque, Menorque, Igual, MayorIgual, Igualque, MenorIgual, IgualIgual, Diferente, 
+        Suma, Resta, Multiplicacion, Division, Exponente, Coma, Pycoma, Parentesis_a, Parentesis_c, Corchete_a, Corchete_c, Llave_a, Llave_c, ERROR;
+
+non terminal INICIO, SENTENCIAS, S, DECLARA, IMPLEFUNCION, RESERVADAS, TIPO, IMPLEOPRINCIPAL, OP_REL, EXP, NUMEROS, PARAMODOVIS, PARAMODOEMPE, NUMEROSDOS,
+             IF, ELSE, OPER, WHILE, LOG, ASIGNA, INC, DEC, REL, PARAMETROS, PARAMODOTERM;
+
+//agregamos la precedencia
+
+precedence left Or;
+precedence left And;
+precedence right Not;
+precedence left Mayorque, Menorque, MayorIgual, MenorIgual, IgualIgual, Diferente;
+precedence left Suma, Resta;
+precedence left Multiplicacion, Division; 
+precedence right Exponente; 
+
+
+start with INICIO;
+
+INICIO ::= Inicio:ini SENTENCIAS Fin Pycoma
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 1. En la línea: "+(iniright+1)+", se esperaba un ';' después de inicio");
+            :}
+            | Inicio Pycoma SENTENCIAS Fin:fin
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 1. En la línea: "+(finright+1)+", se esperaba un ';' después de fin");
+            :}
+            |Inicio Pycoma SENTENCIAS Fin Pycoma
+            |Inicio Pycoma Montar LLDG Pycoma SENTENCIAS Fin Pycoma  
+;
+
+SENTENCIAS ::= S SENTENCIAS 
+        |S
+;
+
+S ::=   DECLARA
+        | IMPLEFUNCION
+        | IF
+        | LOG
+        | OPER
+        | WHILE
+        | ASIGNA
+        | IMPLEOPRINCIPAL
+        | error Pycoma
+        | error Llave_c
+        | RESERVADAS
+;
+
+IMPLEFUNCION::= Programa Identificador Parentesis_a Parentesis_c Llave_a SENTENCIAS Llave_c
+                | Programa Identificador Parentesis_a PARAMETROS Parentesis_c Llave_a SENTENCIAS Llave_c
+;
+
+PARAMETROS::= Ent Identificador Igual EXP Coma PARAMETROS 
+             | Ent Identificador PARAMETROS
+             | NumDec Identificador Igual EXP Coma PARAMETROS 
+             | NumDec Identificador PARAMETROS
+;
+
+RESERVADAS ::= LGColor Parentesis_a NUMEROS Parentesis_c Pycoma
+            |LGColor Parentesis_a NUMEROS Parentesis_c:par
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 1. En la línea: "+(parright+1)+", se esperaba un ';' después del ')' ");
+            :}
+            |LGColor Parentesis_a Numero:num Numero Pycoma Numero Parentesis_c Pycoma
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 5. En la línea: "+(numright+1)+", cada parametro debe estar seguido de un ';'");
+            :}
+            |LGColor Parentesis_a Numero Pycoma Numero:num2 Numero Parentesis_c Pycoma
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 5. En la línea: "+(num2right+1)+", cada parametro debe estar seguido de un ';'");
+            :}
+            |LGColor Parentesis_a Numero Numero Numero:num3 Parentesis_c Pycoma
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 5. En la línea: "+(num3right+1)+", cada parametro debe estar seguido de un ';'");
+            :}
+            |LGColor Parentesis_a Numero:numUn Parentesis_c Pycoma
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 6. En la línea: "+(numUnright+1)+", se requieren más parametros para completar la sentencia");
+            :}
+            |LGColor Parentesis_a Numero Pycoma Numero:numDos Parentesis_c Pycoma
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 6. En la línea: "+(numDosright+1)+", se requieren más parametros para completar la sentencia");
+            :}
+            |LGColor Parentesis_a Numero Pycoma Numero:numTres Pycoma Parentesis_c Pycoma
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 6. En la línea: "+(numTresright+1)+", se requieren más parametros para completar la sentencia");
+            :}
+            |LGColor Parentesis_a Parentesis_c Pycoma:poco
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 3. En la línea: "+(pocoright+1)+", se quiere de un parametro para completar la sentencia");
+            :}
+            | LGEmpezar Parentesis_a PARAMODOEMPE Parentesis_c Pycoma
+            | LGEmpezar Parentesis_a Parentesis_c Pycoma:pica
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 3. En la línea: "+(picaright+1)+", se quiere de un parametro para completar la sentencia");
+            :}
+            | LGEmpezar Parentesis_a PARAMODOEMPE Parentesis_c:parem
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 1. En la línea: "+(paremright+1)+", se esperaba un ';' después del ')' ");
+            :}
+            | LGVertice Parentesis_a SENTENCIAS Parentesis_c Pycoma
+            | LGVertice Parentesis_a SENTENCIAS Parentesis_c:ver
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 1. En la línea: "+(verright+1)+", se esperaba un ';' después del ')' ");
+            :}
+            | LGVertice Parentesis_a:parVer Parentesis_c Pycoma
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 1. En la línea: "+(parVerright+1)+", se esperaba un ';' después del ')' ");
+            :}
+            | LGTerminar Parentesis_a PARAMODOTERM Parentesis_c Pycoma
+            | LGTerminar Parentesis_a PARAMODOTERM Parentesis_c:parte
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 1. En la línea: "+(parteright+1)+", se esperaba un ';' después del ')' ");
+            :}
+            | LGTerminar Parentesis_a Parentesis_c:partes
+             {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 3. En la línea: "+(partesright+1)+", se quiere de un parametro para completar la sentencia");
+            :}
+            | LGVentana Parentesis_a SENTENCIAS Parentesis_c Pycoma
+            | LGModoMatriz Parentesis_a SENTENCIAS Parentesis_c Pycoma
+            | LGMatrizIdentidad Parentesis_a SENTENCIAS Parentesis_c Pycoma
+            | LGMatrizOrtografica Parentesis_a SENTENCIAS Parentesis_c Pycoma
+            | LGModoVisualizacion Parentesis_a PARAMODOVIS Parentesis_c Pycoma
+            | LGModoVisualizacion Parentesis_a Parentesis_c Pycoma:polo
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 3. En la línea: "+(poloright+1)+", se quiere de un parametro para completar la sentencia");
+            :}
+            | LGModoVisualizacion Parentesis_a PARAMODOVIS Parentesis_c:parvi
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 1. En la línea: "+(parviright+1)+", se esperaba un ';' después del ')' ");
+            :}
+            | LGPosicionVentanaInicio Parentesis_a SENTENCIAS Parentesis_c Pycoma
+            | LGTamañoVentanaInicio Parentesis_a SENTENCIAS Parentesis_c Pycoma
+            | LGCrearVentana Parentesis_a Parentesis_c Pycoma
+            | LGCrearVentana Parentesis_a Parentesis_c:parve
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 1. En la línea: "+(parveright+1)+", se esperaba un ';' después del ')' ");
+            :}
+            | LGCrearVentana Parentesis_a Pycoma:pico
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 1. En la línea: "+(picoright+1)+", se esperaba un ')' después del '(' ");
+            :}
+            | LGlimpiarBufferColor Parentesis_a NUMEROSDOS Parentesis_c Pycoma
+            | LGlimpiarBufferColor Parentesis_a NUMEROSDOS Parentesis_c:parLi
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 1. En la línea: "+(parLiright+1)+", se esperaba un ';' después del ')' ");
+            :}
+            | LGlimpiarBufferColor Parentesis_a Numero Pycoma Numero Pycoma Numero Parentesis_c Pycoma:poca
+            {:
+                 VenPrincipal.notificar_er(" ERROR SINTACTICO 6. En la línea: "+(pocaright+1)+", se requieren más parametros para completar la sentencia");
+            :}
+            | LGlimpiarBufferColor Parentesis_a Numero Pycoma Numero Parentesis_c Pycoma:pocas
+            {:
+                 VenPrincipal.notificar_er(" ERROR SINTACTICO 6. En la línea: "+(pocasright+1)+", se requieren más parametros para completar la sentencia");
+            :}
+            | LGlimpiarBufferColor Parentesis_a Numero Parentesis_c Pycoma:pocasi
+            {:
+                 VenPrincipal.notificar_er(" ERROR SINTACTICO 6. En la línea: "+(pocasiright+1)+", se requieren más parametros para completar la sentencia");
+            :}
+            | LGlimpiarBufferColor Parentesis_a Numero:nums1 Numero Pycoma Numero Parentesis_c Pycoma
+            {:
+                 VenPrincipal.notificar_er(" ERROR SINTACTICO 5. En la línea: "+(nums1right+1)+", cada parametro debe estar seguido de un ';'");
+            :}
+            | LGlimpiarBufferColor Parentesis_a Numero Pycoma Numero:nums2 Numero Parentesis_c Pycoma
+            {:
+                 VenPrincipal.notificar_er(" ERROR SINTACTICO 5. En la línea: "+(nums2right+1)+", cada parametro debe estar seguido de un ';'");
+            :}
+            | LGlimpiarBufferColor Parentesis_a Numero Pycoma Numero Pycoma Numero:nums3 Numero Parentesis_c Pycoma
+            {:
+                 VenPrincipal.notificar_er(" ERROR SINTACTICO 5. En la línea: "+(nums3right+1)+", cada parametro debe estar seguido de un ';'");
+            :}
+            | LGlimpiarBufferColor Parentesis_a Parentesis_c Pycoma:pilo 
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 3. En la línea: "+(piloright+1)+", se quiere de un parametro para completar la sentencia");
+            :}
+            | LGMostrarFuncion Parentesis_a SENTENCIAS Parentesis_c Pycoma
+            | LGMostrarFuncion Parentesis_a SENTENCIAS Parentesis_c:parmo
+            {:
+                VenPrincipal.notificar_er(" ERROR SINTACTICO 1. En la línea: "+(parmoright+1)+", se esperaba un ';' después del ')' ");
+            :}
+            | LGRemodeladoFuncion Parentesis_a SENTENCIAS Parentesis_c Pycoma
+;
+
+NUMEROS::= Numero Pycoma Numero Pycoma Numero            
+;
+
+NUMEROSDOS::= Numero Pycoma Numero Pycoma Numero Pycoma Numero           
+;
+
+PARAMODOVIS::= LG_RGBA | LG_RGB | LG_Indice | LG_Solo | LG_Doble | LG_Acumulacion | LG_Alfa | LG_Profundo 
+               | LG_Plantilla | LG_MuestreoMultiple | LG_Estereo | LG_Luminosa
+;
+
+PARAMODOEMPE::= LG_Puntos | LG_Lineas | LG_Linea_Lin | LG_Linea_Ciclo | LG_Triangulos 
+                | LG_Triangulo_Lin | LG_Triangulo_Abanico | LG_Cuadrado | LG_Cuadrado_Lin
+                | LG_Poligono
+; 
+
+PARAMODOTERM::= LG_Puntos | LG_Lineas | LG_Linea_Lin | LG_Linea_Ciclo | LG_Triangulos 
+                | LG_Triangulo_Lin | LG_Triangulo_Abanico | LG_Cuadrado | LG_Cuadrado_Lin
+                | LG_Poligono
+;
+
+IF ::=  Si Parentesis_a LOG
+        Parentesis_c Llave_a SENTENCIAS Llave_c
+        ELSE 
+        | Si Parentesis_a LOG
+        Parentesis_c SENTENCIAS Llave_c:parmo3
+        ELSE
+        {:
+            VenPrincipal.notificar_er(" ERROR SINTACTICO 4. En la línea: "+(parmo3right+1)+", se esperaba '{' después de la condición para iniciar el bloque de instrucciones");
+        :}
+        | Si Parentesis_a LOG
+        Parentesis_c Llave_a SENTENCIAS:parmo2
+        ELSE 
+        {:
+            VenPrincipal.notificar_er(" ERROR SINTACTICO 4. En la línea: "+(parmo2right+1)+", se esperaba '}' para hacer el bloque de instrucciones");
+        :}
+        
+;
+
+ELSE ::= Sino Llave_a SENTENCIAS Llave_c        
+;
+
+OPER ::= Op_incremento|Op_decremento
+;
+
+WHILE ::= Mientras Parentesis_a LOG Parentesis_c Llave_a SENTENCIAS Llave_c
+          | Mientras Parentesis_a LOG Parentesis_c SENTENCIAS Llave_c:parenMi
+          {:
+            VenPrincipal.notificar_er(" ERROR SINTACTICO 4. En la línea: "+(parenMiright+1)+", se esperaba '{' después de la condición para iniciar el bloque de instrucciones");
+          :} 
+;
+
+LOG ::= LOG Or LOG
+    |   LOG And LOG
+    |   Not LOG
+    |   REL           
+;
+
+REL ::= EXP OP_REL EXP
+    |EXP:val
+;
+
+ASIGNA ::= Identificador Igual  EXP Pycoma 
+;
+
+DECLARA ::= TIPO:t Identificador:id Pycoma 
+            {:
+               //VenPrincipal.ids.add(tright,id,t,"");
+             :}
+        | NumDec:t Identificador:id Igual EXP Pycoma
+{:
+               //VenPrincipal.llenarTabla(tright,id,t,"");
+             :}
+        | Ent:t Identificador:id Igual EXP Pycoma     
+        {:
+               //VenPrincipal.llenarTabla(tright,id,t,"");
+             :}
+;
+
+TIPO ::= Elemento
+        | Bool
+;
+
+IMPLEOPRINCIPAL::= Orden_principal Parentesis_a Parentesis_c Llave_a SENTENCIAS Llave_c
+;
+
+EXP::= EXP Suma EXP
+      | EXP Resta EXP
+      | EXP Multiplicacion EXP
+      | EXP Division EXP
+      | EXP Exponente EXP
+      | Identificador
+      | Numero
+      | Parentesis_a LOG Parentesis_c
+;
+
+OP_REL::= Mayorque
+    |     Menorque
+    |     MayorIgual
+    |     MenorIgual
+    |     Igualque
+    |     Diferente
+; 

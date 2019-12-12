@@ -1,0 +1,38 @@
+inicio;
+montar LLDG;
+programa display(){
+    LGColor(0; 0; 1);
+    ent r = 1;
+    ent x = 0;
+    ent y = r;
+    ent dpk = 3 - 2 * r;
+    LGEmpezar(LG_Puntos);
+     mientras (x <= y) {
+        LGVertice(x,y);
+        LGVertice(x+1,y);
+        LGVertice(x,y+1);
+        LGVertice(x+4,y+4);
+        si(dpk >= 0){
+            dpk = 4*(x-y) + 10;
+            y = 1+1;
+        }
+        sino{
+            dpk = dpk + 4*x + 6;
+            x = 1+1;
+        }
+    }
+    LGTerminar(LG_Puntos);
+  }  
+
+//*------------------------------*
+orden_principal(){
+ ent winW = 500;
+ ent winH = 500;
+ LGModoVisualizacion(LG_RGB);
+ LGPosicionVentanaInicio(100,100);
+ LGTamañoVentanaInicio(500,500);
+ LGCrearVentana();
+ LGlimpiarBufferColor(1.0; 1.0; 1.0; 0.0);
+ LGMostrarFuncion(display);
+}
+fin;

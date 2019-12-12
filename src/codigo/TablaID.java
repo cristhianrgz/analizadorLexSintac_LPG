@@ -74,7 +74,7 @@ public void llenarIDS()
 
             },
             new String [] {
-                "   Nombre", "   Tipo", "   Valor"
+                "   No. Linea", "   Nombre", "   Tipo", "   Valor"
             }
         ));
         tbl_ids.setGridColor(new java.awt.Color(204, 204, 204));

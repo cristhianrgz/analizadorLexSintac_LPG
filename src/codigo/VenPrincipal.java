@@ -58,13 +58,12 @@ public class VenPrincipal extends javax.swing.JFrame {
     final Color entryBg;
     public static int linea;
     public static String token;
-    Font font = new Font("Consolas", Font.BOLD, 14);
+    static Font font = new Font("Consolas", Font.BOLD, 14);
     DefaultTableModel tokens;
     
     //Para tabla de id
     public static ArrayList<String> ids = new ArrayList<String>();  
 
-    
     public VenPrincipal() {
         initComponents();
         this.setTitle("IDE - LPG");
@@ -188,12 +187,9 @@ public class VenPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
-                        .addContainerGap())
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 496, Short.MAX_VALUE))))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1014, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -201,7 +197,7 @@ public class VenPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -265,18 +261,16 @@ public class VenPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(333, 333, 333)
-                        .addComponent(jLabel3))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -290,14 +284,13 @@ public class VenPrincipal extends javax.swing.JFrame {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
 
@@ -485,7 +478,8 @@ public class VenPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_go_IDActionPerformed
     
     //Función analizar
-    public void analizarCod(){
+    public void analizarCod() throws Exception{
+        String texto = panelNum.getText();
         txtaSalida.setText("");
         tokens.setRowCount(0);  
         if(panelNum.getText().equals("")){
@@ -494,6 +488,18 @@ public class VenPrincipal extends javax.swing.JFrame {
         else{
            try{
                probarLexer();
+               System.out.println("Inicia la generación de analisis...");
+                LexerCup scan = new LexerCup(new BufferedReader( new StringReader(texto)));
+                Sintactico parser = new Sintactico(scan);
+                parser.parse();
+                notificar_er("\n----------Análisis finalizado----------");
+                
+//                if (cadErrSin.equals("") && ResultError.equals("")){
+//                    txtaSalida.setForeground(new Color(73,156,34));
+//                    txtaSalida.setFont(font);
+//                    txtaSalida.setText(" \n * El análisis se ha completado correctamente * ");
+//            
+//                }
            }catch(IOException ex){
                System.out.println(ex.getMessage());
            }
@@ -587,7 +593,12 @@ public class VenPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_AnalizarMouseClicked
 
     private void CompilarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CompilarMouseClicked
-         analizarCod();// TODO add your handling code here:
+        try {
+            txtaSalida.setText("");
+            analizarCod();// TODO add your handling code here:
+        } catch (Exception ex) {
+            Logger.getLogger(VenPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_CompilarMouseClicked
 
     public void cerrar(){
@@ -647,6 +658,20 @@ public class VenPrincipal extends javax.swing.JFrame {
         });
     }
     
+    static String cadErrSin ="";
+    public static void notificar_er(String cad){
+        //errores.append(cad+"\n");
+        txtaSalida.append(cad+"\n");
+        txtaSalida.setForeground(Color.RED);
+        txtaSalida.setFont(font);
+        
+        if (cad.equals("")){
+            txtaSalida.setForeground(new Color(73,156,34));
+            txtaSalida.setFont(font);
+            txtaSalida.append(" \n * El análisis se ha completado correctamente * ");            
+        }
+    }
+    static String ResultError = "";
     public void probarLexer() throws IOException {
       guardarInfoCod c = new guardarInfoCod();
       File fichero = new File("fichero.lpg");
@@ -661,99 +686,305 @@ public class VenPrincipal extends javax.swing.JFrame {
       Reader reader;
       reader = new BufferedReader(new FileReader("fichero.lpg"));
       lexer lex = new lexer(reader);
-      String Resultado = "";
-      String ResultError = "";
+      
       while(true){
           token tok = lex.yylex();
           if(tok == null){
-              Resultado = Resultado +"FIN";
               return;
           }
           
           switch(tok){
               case ERROR:
-                  ResultError = ResultError +"* ERROR LEXICO 1. En la linea "+(c.linea+1)+".  El símbolo: [ "+lex.lexeme+" ]  NO ES VALIDO para el Lenguaje (LPG) *"+"\n";
-                  txtaSalida.setText(ResultError);
+                  ResultError = ResultError +" ERROR LEXICO 1. En la linea "+(c.linea+1)+".  El símbolo: [ "+lex.lexeme+" ]  NO ES VALIDO para el Lenguaje (LPG) *"+"\n";
+                  txtaSalida.append(ResultError);
                   txtaSalida.setForeground(Color.RED);
                   break;
-
-              case p_reservada: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case t_dato: 
-                   tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case numero: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case identificador: 
-                   tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                   ids.add(lex.lexeme);
-                  break;        
-              case op_aritmetico: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                    
-                  break;
-              case op_incremento: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case op_decremento: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case comillas: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case op_logico:
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case op_relacional: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-
-              case op_asignacion: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case simbol_p: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case p_coma: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case otros: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case parentesis_a: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case parentesis_c: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case corchete_a: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case corchete_c:
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case llave_a: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case llave_c: 
-                    tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
-              case dos_puntos:
-                  tokens.addRow(new Object[]{(c.linea+1),lex.lexeme,tok});
-                  break;
                   
+                case Inicio:
+                    tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Pycoma:
+                    tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Parentesis_a:
+                    tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Parentesis_c:
+                    tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Llave_a:
+                    tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Llave_c:
+                    tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Corchete_a:
+                    tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Corchete_c:
+                    tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Fin:
+                    tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                
+                case Numero:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,"Numero"});
+                    break;
+                case Programa:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Montar:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case LLDG:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Elemento:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Cad:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Mostrar:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;    
+                case Dibujar:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Bool:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Ent:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case NumDec:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;    
+                case NumDecL:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Si:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Sino:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Hacer:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;    
+                case Mientras:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Modelo:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Imprimir:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Obtener:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Orden_principal:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;    
+                case LLDGconoSol:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case LLDGconoLin:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case LLDGcuboSol:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case LLDGcuboLin:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case LLDGesferaSol:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case LLDGesferaLin:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;    
+                case LGrectanSol:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case LGrectanLin:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case LGrotar:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case LGlimpiarBuffer:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case LGlimpiarBufferColor:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Color_Buffer_Bit:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Profundidad_Buffer_Bit:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Acumulacion_Buffer_Bit:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                    break;
+                case Plantilla_Buffer_Bit:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGModoPoligono:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGMaterial:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGColor:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGVertice:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGEmpezar:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGTerminar:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Puntos:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Lineas:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Linea_Lin:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Linea_Ciclo:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Triangulos:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Triangulo_Lin:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Triangulo_Abanico:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Cuadrado:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Cuadrado_Lin:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Poligono:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGModoMatriz:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Vista_Modelo:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Proyeccion:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Textura:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Color:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGMatrizOrtografica:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGMatrizIdentidad:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGVer:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGVolverAMostrar:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGModoVisualizacion:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGPosicionVentanaInicio:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGTamañoVentanaInicio:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGCrearVentana:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGMostrarFuncion:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGRemodeladoFuncion:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGLazoPrincipal:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGMatrizOrtografica2D:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGVentana:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LGEjecucionLineas:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_RGBA:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_RGB:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Indice:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Solo:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Doble:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Acumulacion:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Alfa:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Profundo:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Plantilla:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_MuestreoMultiple:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Estereo:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case LG_Luminosa:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,lexer.lexeme});
+                   break;
+                case Identificador:
+                     tokens.addRow(new Object [] {(c.linea+1),lexer.lexeme,"Identificador"});
+                     
+                    break;
+                default:
+                    //resultado += "  < " + lexer.lexeme + " >\n";
+                    break; 
           }
-          if(ResultError.equals("")){
-                    txtaSalida.setText(" \n  * El análisis se ha completado correctamente * ");
-                    txtaSalida.setForeground(new Color(73,156,34));
-
-                    
-                    txtaSalida.setFont(font);
-                  }
       }
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Abrir;
     private javax.swing.JLabel Analizar;
@@ -778,8 +1009,8 @@ public class VenPrincipal extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextPane panelNum;
     private javax.swing.JMenu tablas_simbolos;
-    public javax.swing.JTable tbtokens;
-    private javax.swing.JTextArea txtaSalida;
+    public static javax.swing.JTable tbtokens;
+    public static javax.swing.JTextArea txtaSalida;
     // End of variables declaration//GEN-END:variables
 
 }
